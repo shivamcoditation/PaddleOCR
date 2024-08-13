@@ -1,0 +1,43 @@
+Plan:
+
+Inferencing of trained recognition model and see results. ---> Training on 2 lac synthetic data for 100 epochs, improvements seen.
+								Training with both synthetic and real data for 100 epochs --> pending
+Inferencing of trained detection model and see results. --> Improvement with more epochs (Need to train on new correct data)
+Data Generation call with Pranav and Srishti
+
+Training Data Validate for both detection/recognition - Done via spot checks
+
+Evaluation script for recognition on the base model only(en_PP-OCRv3_rec_slim)
+82 % -- WORDs --------> ~90 percent given correct boxes
+0 - O,Q confusion
+# - H
+extra boxes 
+some results are more accurate than google OCR 
+
+40% PARA: Majorly Space Issue in Exact Matches
+92,E - 81 325 ,3345,2912,255,40,horizontal,E-81 325,0.8888888888888888
+94,( MIN ) ,3711,954,65,22,horizontal,(MIN),0.8333333333333334
+106,SLOPE 1 : 200 ,3481,3835,159,18,horizontal,SLOPE 1:200,0.9166666666666666
+82% : Threshold: 0.80
+
+Decisions:
+1) Word Level Data creation breaking on spaces. This will avoid space errors as later boxes will be combined with our combination algo.
+Example: E - 81 325 should be in 3 boxes, E-81 325 should be in 2 boxes, E-81325 in one box
+Keep hyphens with the preceding text.
+2) Only one orientation type(Horizontal) data is used for training and detection. Not Both.---------
+3) While inferencing, both orientations are used to predict.
+4) Best Model for finetuning recognition model: en_PP-OCRv3_rec_slim (Base model giving best results)
+
+
+python3 tools/export_model.py -c configs/rec/PP-OCRv3/en_PP-OCRv3_rec.yml -o Global.pretrained_model=/home/ubuntu/PaddleOCR/output/v3_en_mobile/best_accuracy Global.save_inference_dir=./inference/new_rec_model_english/ Global.use_space_char=True
+
+
+python3 -m paddle.distributed.launch --gpus '0,1,2,3' tools/train.py -c configs/rec/PP-OCRv3/en_PP-OCRv3_rec.yml -o Global.pretrained_model=/home/ubuntu/PaddleOCR/output/v3_en_mobile/best_accuracy  Global.use_space_char=True
+
+
+python3 tools/train.py -c configs/det/ch_PP-OCRv3/ch_PP-OCRv3_det_student.yml -o Global.pretrained_model=./ch_PP-OCRv3_det_distill_train/student.pdparams
+
+
+python3 tools/export_model.py -c configs/det/ch_PP-OCRv3/ch_PP-OCRv3_det_student.yml -o Global.pretrained_model=./output/new_model_ouput/latest  Global.save_inference_dir=./inference/new_detection_model/
+
+
