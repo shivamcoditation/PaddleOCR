@@ -7,7 +7,7 @@ This repository is structured to facilitate two main tasks: **data generation fo
 ### Data Generation for Pretraining
 
 - **`fonts/`**: Contains various text fonts used to introduce text variations during synthetic data generation.
-- **`jsons/`**: Stores JSON files containing text data of PNIDs (Personal Identification Numbers) extracted via GoogleOCR.
+- **`jsons/`**: Stores JSON files containing text data of PNIDs extracted via GoogleOCR.
 - **`pnid_images/`**: Includes images converted from PNIDs.
 
 ### Scripts and Utilities
