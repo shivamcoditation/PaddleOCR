@@ -29,4 +29,21 @@ This repository is structured to facilitate two main tasks: **data generation fo
 - **`combine_logic.py`**: A newly developed, easy-to-understand algorithm to combine predicted text. The accuracy of this algorithm ranges from 96% to 100%, depending on the selected threshold value.
 - **`full_inference.py`**: A complete end-to-end inference script that utilizes both the newly trained recognition and detection models. The output is saved into a DataFrame for further analysis.
 
+Sequential Guidelines
+Data Generation: Use the combined_data_gen.py script to generate data for both text recognition and detection tasks.
+
+Transfer Data: After generating the data, transfer the .txt files along with the detection patches and recognition text images to their respective EC2 instances for detection and recognition tasks.
+
+Model Training: To train the models, refer to the commands documented in the Plan Notes.txt file. Alternatively, you can follow the guidelines provided in the PaddleOCR documentation for finetuning.
+
+Export Inference Model: Once training is complete, export the trained model for inference purposes.
+
+Run Inference and Post-Processing: Execute the following scripts in sequence to perform inference and clean up the predictions:
+
+full_inference.py
+clean.py
+combine_logic.py
+clean.py (run this script again for final clean-up)
+
+
 This README serves as a guide to help users navigate the repository and understand the purpose of each component. The code is designed to be modular and scalable, ensuring ease of use and adaptability to various OCR-related tasks.
